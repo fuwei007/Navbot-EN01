@@ -6,7 +6,6 @@
 typedef struct CmdManeuverTypDef{
   int8_t roll;
   int8_t height;
-  int16_t linear;
   uint8_t linear_H;
   uint8_t linear_L;
   int8_t angular;
