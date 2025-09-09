@@ -217,8 +217,8 @@ void setup() {
   ID[1] = 2;
   ACC[0] = 30;
   ACC[1] = 30;
-  Speed[0] = 300;
-  Speed[1] = 300;
+  Speed[0] = 400;//
+  Speed[1] = 400;//
   Position[0] =2048;
   Position[1] =2048;
   //The steering gear (ID1/ID2) runs to their respective positions at maximum speed V=2400 steps/SEC and \
@@ -327,12 +327,12 @@ void loop() {
   motor2.target = (-0.5) * (LQR_u - YAW_output);
 
   //Shut down output after falling out of control
-  if (abs(LQR_angle) > 25.0f) {
+  if (abs(LQR_angle) > 75.0f) {
     uncontrolable = 1;
   }
   if (uncontrolable != 0)  //Delay recovery after lifting
   {
-    if (abs(LQR_angle) < 10.0f) {
+    if (abs(LQR_angle) < 60.0f) {
       uncontrolable++;
     }
     if (uncontrolable > 200)  //The delay time of 200 program cycles
@@ -457,10 +457,10 @@ void leg_loop() {
   if (jump_flag == 0)  //Not in a jumping state
   {
     //Adaptive control of the body height
-    ACC[0] = 5;
-    ACC[1] = 5;
-    Speed[0] = 150;
-    Speed[1] = 150;
+    ACC[0] = 8;//
+    ACC[1] = 8;//
+    Speed[0] = 300;//
+    Speed[1] = 300;//
     float roll_angle = (float)mpu6050.getAngleX() + 2.0 + rp.offset_roll;
     // leg_position_add += pid_roll_angle(roll_angle);
     leg_position_add = pid_roll_angle(lpf_roll(roll_angle));  //test
