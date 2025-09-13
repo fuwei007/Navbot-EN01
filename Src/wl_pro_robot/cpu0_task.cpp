@@ -139,7 +139,7 @@ void default_show_mode(void) {
       file.read(frames_data, frames_size);
       OLED_DrawBMP(x_coord, 0, width, height, frames_data, 0);
     }
-    OLED_ShowNum(0, 0, i, 2, 16, 0);
+    // OLED_ShowNum(0, 0, i, 2, 16, 0);
     delay(frames_time);
     if(exit_default_show_mode() == true){
       file.close();
@@ -182,7 +182,7 @@ void show_user_assign_expression(void) {
       file.read(frames_data, frames_size);
       OLED_DrawBMP(x_coord, 0, width, height, frames_data, 0);
     }
-    OLED_ShowNum(0, 0, i, 2, 16, 0);
+    // OLED_ShowNum(0, 0, i, 2, 16, 0);
     delay(frames_time);
     if(exit_user_expression() == true){
       file.close();

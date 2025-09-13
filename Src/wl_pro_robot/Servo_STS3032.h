@@ -22,6 +22,7 @@ typedef long s32;
 #define SMS_STS_ID 5
 #define SMS_STS_TORSION_SW 40
 #define SMS_STS_ACC 41
+#define SMS_STS_EEPROM_LOCK 55
 
 #define INST_SYNC_WRITE 0x83
 
@@ -86,6 +87,7 @@ public:
   void on_all_servo(void);
   void calibrate_all_servo(void);
   void set_servo_id(u8 old_id, u8 new_id);
+  void set_servo_eeprom_lock(u8 id,u8 lock);
 };
 
 extern SMS_STS sms_sts;

@@ -367,6 +367,22 @@ void RobotProtocol::json_is_sys_set_openai_token(StaticJsonDocument<300> &doc) {
     save_config_json();
   }
 }
+void set_setvo_id1()
+{
+  sms_sts.set_servo_eeprom_lock(2,0);
+  delay(2);
+  sms_sts.set_servo_id(2,1);
+  // delay(2);
+  // sms_sts.set_servo_eeprom_lock(1,1);
+}
+void set_setvo_id2()
+{
+  sms_sts.set_servo_eeprom_lock(1,0);
+  delay(2);
+  sms_sts.set_servo_id(1,2);
+  // delay(2);
+  // sms_sts.set_servo_eeprom_lock(2,1);
+}
 void RobotProtocol::calibrate_servo(void)
 {
   sms_sts.calibrate_all_servo();
@@ -393,9 +409,9 @@ void RobotProtocol::isSys(StaticJsonDocument<300> &doc) {
   } else if (type == MESSAGE_TYPE.CALIBRATION_SERVO) {
     calibrate_servo();
   } else if (type == MESSAGE_TYPE.SET_SERVO_ID1) {
-    sms_sts.set_servo_id(2,1);
+    set_setvo_id1();
   } else if (type == MESSAGE_TYPE.SET_SERVO_ID2) {
-    sms_sts.set_servo_id(1,2);
+    set_setvo_id2();
   } else if (type == MESSAGE_TYPE.SET_NAME) {
     json_is_sys_set_name(doc);
   } else if (type == MESSAGE_TYPE.SHOW_EXPRESSION) {
@@ -617,7 +633,7 @@ void RobotProtocol::parseBasic(StaticJsonDocument<300> &doc) {
   }
 
   int joy_x = doc["joy_x"];
-  wrobot.joyx = joy_x * angular / 100;
+  wrobot.joyx = joy_x;// * angular / 100;
   if (joy_x >= 0) {
     _now_buf[12] = 0;
   } else {
@@ -626,7 +642,7 @@ void RobotProtocol::parseBasic(StaticJsonDocument<300> &doc) {
   _now_buf[13] = abs(joy_x);
 
   int joy_y = doc["joy_y"];
-  wrobot.joyy = joy_y * linear / 100;
+  wrobot.joyy = joy_y;// * linear / 100;
   if (joy_y >= 0) {
     _now_buf[14] = 0;
   } else {

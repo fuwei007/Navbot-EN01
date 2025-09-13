@@ -142,6 +142,11 @@ void SMS_STS::calibrate_all_servo(void) {
   u8 offbuf[2] = { 128, 128 };
   syncWrite(ID, 2, SMS_STS_TORSION_SW, offbuf, 1);
 }
+void SMS_STS::set_servo_eeprom_lock(u8 id,u8 lock) {
+  u8 ID[1] = { id };
+  u8 offbuf[1] = { lock };
+  syncWrite(ID, 1, SMS_STS_EEPROM_LOCK, offbuf, 1);
+}
 void SMS_STS::set_servo_id(u8 old_id, u8 new_id) {
   u8 ID[1] = { old_id };
   u8 offbuf[1] = { new_id };

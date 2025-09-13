@@ -294,19 +294,22 @@ void loop() {
   //The self-balancing calculated output torque is assigned to the motor
   motor1.target = (-0.5) * (LQR_u + YAW_output);
   motor2.target = (-0.5) * (LQR_u - YAW_output);
+ 
+
 
   //Shut down output after falling out of control
+  
   if (abs(LQR_angle) > 45.0f) {
     uncontrolable = 1;
   }
   if (uncontrolable != 0)  //Delay recovery after lifting
   {
-    if (abs(LQR_angle) < 25.0f) {
+    if (abs(LQR_angle) < 35.0f) {
       uncontrolable++;
     }
     if (uncontrolable > 200)  //The delay time of 200 program cycles
     {
-      uncontrolable = 0;
+     uncontrolable = 0;
     }
   }
 
@@ -315,6 +318,10 @@ void loop() {
     motor1.target = 0;
     motor2.target = 0;
     leg_position_add = 0;
+    wrobot.joyx = 0;
+    wrobot.joyy = 0;
+    wrobot.roll = 0;
+    wrobot.height = 34;
   }
 
   //Record the last remote control data
@@ -425,12 +432,13 @@ void leg_loop() {
   jump_loop();
   if (jump_flag == 0)  //Not in a jumping state
   {
+    static s16 last_Position[2];
     //Adaptive control of the body height
     ACC[0] = 5;
     ACC[1] = 5;
     Speed[0] = 150;
     Speed[1] = 150;
-    float roll_angle = (float)mpu6050.getAngleX() + 2.0 + rp.offset_roll;
+    float roll_angle = (float)mpu6050.getAngleX() + rp.offset_roll;
     // leg_position_add += pid_roll_angle(roll_angle);
     leg_position_add = pid_roll_angle(lpf_roll(roll_angle));  //test
     Position[0] = 2048 + 8.4 * (wrobot.height - 32) - leg_position_add;
@@ -443,7 +451,14 @@ void leg_loop() {
       Position[1] = 1586;
     else if (Position[1] > 1986)
       Position[1] = 1986;
-    sms_sts.SyncWritePosEx(ID, 2, Position, Speed, ACC);
+
+    if((last_Position[1] != Position[1])  || (last_Position[0] != Position[0]))
+    {
+      last_Position[0] = Position[0];
+      last_Position[1] = Position[1];
+      sms_sts.SyncWritePosEx(ID, 2, Position, Speed, ACC);
+    }
+    
   }
 }
 
@@ -488,6 +503,7 @@ void yaw_loop() {
   float yaw_angle_control = pid_yaw_angle(YAW_angle_total);
   float yaw_gyro_control = pid_yaw_gyro(YAW_gyro);
   YAW_output = yaw_angle_control + yaw_gyro_control;
+
 }
 
 //Web Data Update
@@ -578,7 +594,7 @@ void bat_check() {
   {
     digitalWrite(LED_BAT, HIGH);
   }
-  else if(rp.battery_voltage > 5)
+  else if(rp.battery_voltage > 0.5)
   {
     static uint8_t toggle;
     toggle = !toggle;
