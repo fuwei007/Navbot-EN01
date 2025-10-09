@@ -299,12 +299,12 @@ void loop() {
 
   //Shut down output after falling out of control
   
-  if (abs(LQR_angle) > 45.0f) {
+  if (abs(LQR_angle) > 25.0f) {
     uncontrolable = 1;
   }
   if (uncontrolable != 0)  //Delay recovery after lifting
   {
-    if (abs(LQR_angle) < 35.0f) {
+    if (abs(LQR_angle) < 15.0f) {
       uncontrolable++;
     }
     if (uncontrolable > 200)  //The delay time of 200 program cycles
