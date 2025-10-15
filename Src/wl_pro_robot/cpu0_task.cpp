@@ -17,6 +17,7 @@ void default_show_mode(void);
 bool show_mode_check(void);
 bool ten_msec_tick_cpu0(void);
 void show_user_assign_expression(void);
+void shuow_low_battery();
 
 // typedef bool (*exit)();
 
@@ -52,6 +53,14 @@ void cpu0_task(void *ptParam) {
   SPIFFS.begin(true);
   OLED_Init();
   while (1) {
+
+    if(rp.battery_voltage < 7.2)
+    {
+      shuow_low_battery();
+      continue;
+    }
+
+
     show_mode_check();
     switch (show_mode) {
       case SHOW_MODE_DEFAULT:
@@ -67,7 +76,18 @@ void cpu0_task(void *ptParam) {
     }
   }
 }
+void shuow_low_battery(void)
+{
+  OLED_ShowString(0, 16, "low battery", 16, 0);
+  char arr[10]= { 0 };
+  sprintf(arr,"%.2f",rp.battery_voltage);
+  String str = (char*)arr;
+  OLED_ShowString(0, 32, (char*)str.c_str(), 16, 0);
 
+  delay(500);
+  OLED_Fill(0, 0, OLED_W, OLED_H, 0x00);
+  delay(500);
+}
 enum {
   ADVANCE = 0x0001,         //前
   RETREAT = 0x0002,         //后

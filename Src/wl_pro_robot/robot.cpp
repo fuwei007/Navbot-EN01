@@ -9,8 +9,8 @@
 #include "cpu0_task.h"
 #include "ble.h"
 #include "web_socket_client_util.h"
+#include <MPU6050_tockn.h>
 
-int uncontrolable = 0;
 int BAT_PIN = 35;
 esp_adc_cal_characteristics_t adc_chars;
 Wrobot wrobot;
@@ -394,6 +394,39 @@ void RobotProtocol::calibrate_servo(void)
   delay(2);
   sms_sts.on_all_servo();
 }
+void RobotProtocol::set_test_number(StaticJsonDocument<300> &doc)
+{
+  if (doc["value"].isNull() == true) {
+    test_number = 0;
+  } else {
+    test_number = (uint8_t)doc["value"];
+  }
+}
+void RobotProtocol::test_log_output()
+{
+  switch(test_number)
+  {
+    case 1:
+    {
+      extern MPU6050 mpu6050;
+      float x = mpu6050.getAngleX();
+      float y = mpu6050.getAngleY();
+      float z = mpu6050.getAngleZ();
+
+      Serial.print("x:");
+      Serial.print(x);
+
+      Serial.print(" y:");
+      Serial.print(y);
+
+      Serial.print(" z:");
+      Serial.print(z);
+
+      Serial.println("");
+
+    }break;
+  }
+}
 void RobotProtocol::isSys(StaticJsonDocument<300> &doc) {
   String type = doc["type"];
   Serial.print("type:");
@@ -422,11 +455,13 @@ void RobotProtocol::isSys(StaticJsonDocument<300> &doc) {
   } else if (type == MESSAGE_TYPE.SHOW_EXPRESSION) {
     json_is_sys_show_expression(doc);
   } else if (type == MESSAGE_TYPE.GET_EXPRESSION) {
-    json_is_sys_send_expression(FEEDBACK_CHANNEL.ALL);
+    json_is_sys_send_expression(FEEDBACK_CHANNEL.ALL); 
   } else if (type == MESSAGE_TYPE.SET_CLOUD_TOKEN) {
     json_is_sys_set_cloud_token(doc);
   } else if (type == MESSAGE_TYPE.SET_OPENAI_TOKEN) {
     json_is_sys_set_openai_token(doc);
+  } else if (type == MESSAGE_TYPE.SET_TEST_NUMBER) {
+    set_test_number(doc);
   } else {
     Serial.println("Invalid json keyworeds.\r\n");
   }
@@ -633,6 +668,7 @@ void RobotProtocol::parseBasic(StaticJsonDocument<300> &doc) {
   wrobot.go = stable;
   if (stable) {
     _now_buf[11] = 1;
+    rp.uncontrolable = 0;
   } else {
     _now_buf[11] = 0;
   }

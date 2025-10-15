@@ -281,6 +281,7 @@ void loop() {
   }
   if (ten_msec_tick()) {
     ble_loop();
+    rp.test_log_output();
     // show_expression_time_callback(10);
   }
 
@@ -299,22 +300,22 @@ void loop() {
 
   //Shut down output after falling out of control
   
-  if (abs(LQR_angle) > 25.0f) {
-    uncontrolable = 1;
+  if (abs(LQR_angle) > rp.uncontrolable_angle) {
+    rp.uncontrolable = 1;
   }
-  if (uncontrolable != 0)  //Delay recovery after lifting
+  if (rp.uncontrolable != 0)  //Delay recovery after lifting
   {
     if (abs(LQR_angle) < 15.0f) {
-      uncontrolable++;
+      rp.uncontrolable++;
     }
-    if (uncontrolable > 200)  //The delay time of 200 program cycles
+    if (rp.uncontrolable > 200)  //The delay time of 200 program cycles
     {
-     uncontrolable = 0;
+     rp.uncontrolable = 0;
     }
   }
 
   //Turn off output (remote control stop or Angle is too large out of control)
-  if (wrobot.go == 0 || uncontrolable != 0) {
+  if (wrobot.go == 0 || rp.uncontrolable != 0) {
     motor1.target = 0;
     motor2.target = 0;
     leg_position_add = 0;

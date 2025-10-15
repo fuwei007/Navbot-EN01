@@ -133,9 +133,9 @@ void SMS_STS::off_all_servo(void) {
 //Write "1" to address SMS_STS_TORSION_SW to start the servo motor.
 void SMS_STS::on_all_servo(void) {
   servo_sw = 1;
-  u8 ID[1] = { 254 };
-  u8 offbuf[1] = { 1 };
-  syncWrite(ID, 1, SMS_STS_TORSION_SW, offbuf, 1);
+  u8 ID[2] = { 1, 2 };
+  u8 offbuf[2] = { 1,1 };
+  syncWrite(ID, 2 , SMS_STS_TORSION_SW, offbuf, 1);
   servo_off = false;
 }
 //Write "128" to address SMS_STS_TORSION_SW set the calibration servo to 2048.

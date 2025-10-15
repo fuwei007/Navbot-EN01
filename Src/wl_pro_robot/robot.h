@@ -71,6 +71,8 @@ struct {
   const String SET_CLOUD_TOKEN = "set_cloud_token";
   const String SET_OPENAI_TOKEN = "set_openai_token";
 
+  const String SET_TEST_NUMBER = "set_test_number";
+
 } MESSAGE_TYPE;
 
 struct {
@@ -102,13 +104,15 @@ typedef enum {
 
 class RobotProtocol {
 public:
-  double battery_voltage;
+  double battery_voltage = 8.4f;
   double pcb_version;
   double fahrenheit;
   double centigrade;
   double battery_level;
   int status;
   int16_t offset_roll = 0;
+  int uncontrolable = 0;   //Too much tilt and loss of control
+  float uncontrolable_angle = 40.0f;
 
   bool charge = false;
   bool socket_connected = false;
@@ -121,6 +125,7 @@ public:
   String show_expression;
   int show_expression_time = -1;  //
 
+  uint8_t test_number=0;
 
   StaticJsonDocument<WIFI_INFO_JSON_SIZE> wifi_info_json;
   StaticJsonDocument<CONFIG_JSON_SIZE> config_json;
@@ -148,6 +153,8 @@ public:
   void send_heartbeat(void);
   void save_wifi_info_json(void);
   void json_test(char *json_arr);
+  void set_test_number(StaticJsonDocument<300> &doc);
+  void test_log_output(void);
 private:
   uint8_t *_now_buf;
   uint8_t *_old_buf;
@@ -165,8 +172,6 @@ private:
   void calibrate_servo(void);
 };
 
-
-extern int uncontrolable;  //Too much tilt and loss of control
 extern int BAT_PIN;        // select the input pin for the ADC
 extern esp_adc_cal_characteristics_t adc_chars;
 
