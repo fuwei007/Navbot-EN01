@@ -1,0 +1,35 @@
+U{"type":"get_device_info"}
+U{"type":"get_expression"}
+U{"type": "show_expression","file":"Advance.bin","time":60}
+
+U{"stable":1,"mode":"basic","dir":"stop","joy_y":0,"joy_x":0}
+
+U{"type":"off_servo"}
+U{"type":"calibrate_servo"}
+
+U{"type":"set_servo_ID1"}
+U{"type":"set_servo_ID2"}
+
+U{"type":"set_test_number","value":1}
+
+U{"type":"set_cloud_token","token":"****************" }
+U{"type":"set_openai_token","token":*****************"}
+
+
+U{"type":"sys_wifi","ssid":"xiaole3671","password":"1515151515","state":"client"}
+U{"type":"set_name","name":"xxxxxxxxxxxx"}
+
+
+U{"type":"sys_web_socket_server","host":"hub.navbot.com","port":443,"path":"/ws/4453266152614de79657f6e078f8e2c7"}
+
+
+{"expression":["Angry.bin","Bored.bin","Cray.bin","Dizzy.bin","Happy.bin","Infatuate.bin","Pained.bin","Relaxed.bin","Sad.bin","Standby-Blink.bin","Standby-Doze.bin","Standby-Look.bin","z.bin"]}
+
+
+
+
+
+
+
+
+
